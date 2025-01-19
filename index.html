@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe Game</title>
+    <style>
+        body {
+            color: white;
+            background: linear-gradient(135deg, #000428, #004e92);
+            font-family: 'Gill Sans', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h3 {
+            color: #00d4ff;
+            font-size: 24pt;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            width: 100px;
+            background: linear-gradient(135deg, #00172d, #003f6e);
+            font-size: 50pt;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: bisque;
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .hid {
+            color: black;
+        }
+
+        button {
+            color: #fff;
+            background: #004e92;
+            font-size: 16pt;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #0066cc;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .option {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .twoPlayer, .VsComputer {
+            
+            text-decoration: none;
+            color: #fff;
+            background: #004e92;
+            font-size: 16pt;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .lastGameData {
+            color: #165f7e;
+            font-size: 16pt;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="option">
+        <div ><a href="https://stusharads.github.io/TicTacToe3/" class="twoPlayer">Two Player</a></div>
+        <div ><a href="http://127.0.0.1:5501/TicTacToeAllvscomp.html" class="VsComputer">Vs Computer</a></div>
+    </div>
+    <h3>Tic Tac Toe By Tushar</h3>
+    <div class="container">
+        <div class="box hid" id="a"></div>
+        <div class="box hid" id="b"></div>
+        <div class="box hid" id="c"></div>
+    </div>
+    <div class="container">
+        <div class="box hid" id="d"></div>
+        <div class="box hid" id="e"></div>
+        <div class="box hid" id="f"></div>
+    </div>
+    <div class="container">
+        <div class="box hid" id="g"></div>
+        <div class="box hid" id="h"></div>
+        <div class="box hid" id="i"></div>
+    </div>
+    <button onclick="location.reload()">Restart</button>
+
+    <div class="lastGameData"> </div>
+
+    <script>
+        let data = JSON.parse(localStorage.getItem("data")) || [];
+        let winner = JSON.parse(localStorage.getItem("winner")) || [];
+        let i = JSON.parse(localStorage.getItem("i")) || 0;
+
+        // Display last game details
+        document.querySelector(".lastGameData").innerText += "Game Number: " + i + "\n";
+        if (data.length > 0) {
+            if (winner.length > 0) {
+                document.querySelector(".lastGameData").innerText += "Last Game Result: " + winner[winner.length - 1].winner + "\n";
+            } else {
+                document.querySelector(".lastGameData").innerText += "Last Game Data: ";
+            }
+
+            for (let j = 0; j < data.length; j++) {
+                if (j % 2 === 0) {
+                    document.querySelector(".lastGameData").innerText += "X:" + data[j].X + ",";
+                } else {
+                    document.querySelector(".lastGameData").innerText += "O:" + data[j].O + ",";
+                }
+            }
+        }
+
+        let wincount = 0;
+        let C = 0;
+
+        const cells = [
+            document.querySelector('#a'),
+            document.querySelector('#b'),
+            document.querySelector('#c'),
+            document.querySelector('#d'),
+            document.querySelector('#e'),
+            document.querySelector('#f'),
+            document.querySelector('#g'),
+            document.querySelector('#h'),
+            document.querySelector('#i')
+        ];
+
+        const winConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        function isWinningMove(player) {
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (
+                    cells[a].innerText === player &&
+                    cells[b].innerText === player &&
+                    cells[c].innerText === ''
+                ) return c;
+                if (
+                    cells[a].innerText === player &&
+                    cells[c].innerText === player &&
+                    cells[b].innerText === ''
+                ) return b;
+                if (
+                    cells[b].innerText === player &&
+                    cells[c].innerText === player &&
+                    cells[a].innerText === ''
+                ) return a;
+            }
+            return null;
+        }
+
+        function computerMove() {
+            let winMove = isWinningMove('X');
+            if (winMove !== null) return winMove;
+
+            let blockMove = isWinningMove('O');
+            if (blockMove !== null) return blockMove;
+
+            if (cells[4].innerText === '') return 4;
+
+            const corners = [0, 2, 6, 8];
+            for (let corner of corners) {
+                if (cells[corner].innerText === '') return corner;
+            }
+
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].innerText === '') return i;
+            }
+        }
+
+        function checkWin() {
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (
+                    cells[a].innerText !== '' &&
+                    cells[a].innerText === cells[b].innerText &&
+                    cells[b].innerText === cells[c].innerText
+                ) {
+                    wincount = 1;
+                    let winMessage = document.createElement('h1');
+                    winMessage.innerText = `Player ${cells[a].innerText} won the game!!`;
+                    winner.push({ "winner": cells[a].innerText });
+                    localStorage.setItem("winner", JSON.stringify(winner));
+                    winMessage.style.color = "#00ff00";
+                    winMessage.style.fontSize = "24pt";
+                    winMessage.style.textShadow = "2px 2px 5px #000";
+                    document.body.append(winMessage);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function checkDraw() {
+            if (C >= 9 && wincount === 0) {
+                let drawMessage = document.createElement('h1');
+                drawMessage.innerText = "DRAW!!";
+                winner.push({ "winner": "DRAW" });
+                localStorage.setItem("winner", JSON.stringify(winner));
+                drawMessage.style.color = "#ff4500";
+                drawMessage.style.fontSize = "24pt";
+                drawMessage.style.textShadow = "2px 2px 5px #000";
+                document.body.append(drawMessage);
+                return true;
+            }
+            return false;
+        }
+
+        document.addEventListener('click', function (event) {
+            if (wincount === 1) return;
+
+            let clickedCell = event.target;
+            if (!clickedCell.classList.contains('box') || clickedCell.innerText !== '') {
+                return;
+            }
+
+            clickedCell.style.color = "white";
+            clickedCell.innerText = 'O';
+            clickedCell.style.backgroundColor = "#004e92";
+            C++;
+            data.push({ "O": clickedCell.id });
+            updateLocalStorage();
+            if (checkWin() || checkDraw()) return;
+
+            setTimeout(() => {
+                let move = computerMove();
+                if (move !== undefined) {
+                    cells[move].style.color = "white";
+                    cells[move].innerText = 'X';
+                    cells[move].style.backgroundColor = "#004e92";
+                    C++;
+                    data.push({ "X": cells[move].id });
+                    updateLocalStorage();
+                    if (checkWin() || checkDraw()) return;
+                }
+            }, 100);
+        });
+
+        function updateLocalStorage() {
+            localStorage.setItem("data", JSON.stringify(data));
+            localStorage.setItem("i", i); // Save the game count
+            localStorage.setItem("winner", JSON.stringify(winner)); // Save the winners
+        }
+
+        document.querySelector("button").addEventListener("click", function () {
+            i++;
+            data = [];
+            localStorage.setItem("data", JSON.stringify(data));
+            localStorage.setItem("i", i);
+            location.reload();
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
