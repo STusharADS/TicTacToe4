@@ -1,0 +1,4 @@
+Tushar bhaiya-- randomize the win method , some time let them win other times make the computer unbeatable
+me-- make an unbeatable computer mode as well
+Krish-- which mode we are in currently , colourize it      (done)
+optional-- add a clock for prac
