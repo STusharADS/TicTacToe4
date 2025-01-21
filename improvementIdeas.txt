@@ -2,3 +2,7 @@ Tushar bhaiya-- randomize the win method , some time let them win other times ma
 me-- make an unbeatable computer mode as well
 Krish-- which mode we are in currently , colourize it      (done)
 optional-- add a clock for prac
+
+add the local storage info here as well
+some times gliches background into multiple section fix that
+sometimes shows undef in the previous game moves in tictactoe 4 repo
