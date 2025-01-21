@@ -101,7 +101,9 @@
             margin-top: 20px;
             transition: background 0.3s ease;
         }
-
+        .VsComputer{
+            color:orange;
+        }
         .lastGameData {
             color: #165f7e;
             font-size: 16pt;
@@ -116,8 +118,8 @@
 
 <body>
     <div class="option">
-        <div ><a href="https://stusharads.github.io/TicTacToe3/" class="twoPlayer">Two Player</a></div>
-        <div ><a href="https://stusharads.github.io/TicTacToe4/" class="VsComputer">Vs Computer</a></div>
+        <div ><a href="http://127.0.0.1:5501/TicTacToeALL.html" class="twoPlayer">Two Player</a></div>
+        <div ><a href="http://127.0.0.1:5501/TicTacToeAllvscomp.html" class="VsComputer">Vs Computer</a></div>
     </div>
     <h3>Tic Tac Toe By Tushar</h3>
     <div class="container">
@@ -144,7 +146,7 @@
         let winner = JSON.parse(localStorage.getItem("winner")) || [];
         let i = JSON.parse(localStorage.getItem("i")) || 0;
 
-        // Display last game details
+        
         document.querySelector(".lastGameData").innerText += "Game Number: " + i + "\n";
         if (data.length > 0) {
             if (winner.length > 0) {
@@ -299,8 +301,8 @@
 
         function updateLocalStorage() {
             localStorage.setItem("data", JSON.stringify(data));
-            localStorage.setItem("i", i); // Save the game count
-            localStorage.setItem("winner", JSON.stringify(winner)); // Save the winners
+            localStorage.setItem("i", i); 
+            localStorage.setItem("winner", JSON.stringify(winner));
         }
 
         document.querySelector("button").addEventListener("click", function () {
